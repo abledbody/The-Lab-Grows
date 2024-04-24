@@ -7,6 +7,7 @@ local Interactable = {
 		return self.rect:contains(x,y)
 	end,
 	interact = function(self,verb)
+		if not self.interactions[verb] then return end
 		self.interactions[verb](self)
 	end,
 }

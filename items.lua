@@ -14,6 +14,25 @@ local scene_item = {
 }
 scene_item.__index = scene_item
 
+local item = {
+	into_scene = function(self,pos,room)
+		local interaction_rect = self.master.interaction_rect
+		local rect_pos = pos+interaction_rect.pos
+		local size = interaction_rect.size
+		local o = {
+			item = self,
+			pos = vec(pos),
+		}
+		o.interactable = interaction.interactable(
+			utils.rect(rect_pos,size),
+			{take = function() del(room.objects,o) end}
+		)
+		setmetatable(o,scene_item)
+		return o
+	end
+}
+item.__index = item
+
 local item_data = {
 	screwdriver = {
 		scene_sprite = 192,
@@ -25,22 +44,11 @@ local item_data = {
 
 function items.new(key,data)
 	local master = item_data[key]
-	return {
+	local o = {
 		master = master,
 		data = data,
 	}
-end
-
-function items.make_scene_item(item,pos)
-	local interaction_rect = item.master.interaction_rect
-	local rect_pos = pos+interaction_rect.pos
-	local size = interaction_rect.size
-	local o = {
-		item = item,
-		pos = vec(pos),
-		interactable = interaction.interactable(utils.rect(rect_pos,size)),
-	}
-	setmetatable(o,scene_item)
+	setmetatable(o,item)
 	return o
 end
 

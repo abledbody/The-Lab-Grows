@@ -38,7 +38,8 @@
 		"notify",
 		"stop",
 		"send_message",
-		"tostr"
+		"tostr",
+		"del"
 	],
 	"Lua.diagnostics.disable": [
 		"trailing-space",

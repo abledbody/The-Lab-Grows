@@ -28,9 +28,9 @@ rooms[1] = {
 			floor_plane_index = 1,
 		}
 	},
-	objects = {
-		items.make_scene_item(items.new("screwdriver"),vec(64,171))
-	}
+}
+rooms[1].objects = {
+	items.new"screwdriver":into_scene(vec(64,171),rooms[1]),
 }
 local room = rooms[1]
 

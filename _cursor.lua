@@ -27,7 +27,7 @@ function _cursor.update()
 	window{cursor=cursor}
 	if lmb and not was_lmb then
 		if hovered_interactable then
-			player.go_to_interact(hovered_interactable)
+			player.go_to_interact{interactable = hovered_interactable, verb = "take"}
 		else
 			player.set_dest(mouse_x)
 		end

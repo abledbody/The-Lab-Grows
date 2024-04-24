@@ -65,7 +65,9 @@ local function lock_animation()
 	animation_locked = true
 end
 
-local function grab_queued()
+local function interact_with_queued()
+	if not queued_interact then return end
+	queued_interact.interactable:interact(queued_interact.verb)
 	queued_interact = nil
 	note(nil,2,32,nil,nil,9)
 end
@@ -82,7 +84,7 @@ animations.walking[9].on_enter = play_footstep_sound
 animations.grab_forward = animation.sprite_string(28,16,0.05)
 animations.grab_forward.on_enter = lock_animation
 animations.grab_forward.on_end = finish_animation
-animations.grab_forward[5].on_enter = grab_queued
+animations.grab_forward[5].on_enter = interact_with_queued
 
 anim = animation.play(animations.idle)
 
@@ -110,10 +112,10 @@ function player.enter_room(plane,x)
 	player_x = x
 end
 
-function player.go_to_interact(interactable)
-	local interactable_rect = interactable.rect
+function player.go_to_interact(interaction)
+	local interactable_rect = interaction.interactable.rect
 	player.set_dest(interactable_rect.pos[1]+interactable_rect.size[1]/2)
-	queued_interact = interactable
+	queued_interact = interaction
 end
 
 return player
