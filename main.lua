@@ -21,6 +21,7 @@ function _draw()
 	player.draw()
 	locations.draw_objects()
 	locations.draw_fg()
+	_cursor.draw()
 	--print(string.format("%.1f",stat(1)*100),0,0,37)
 end
 
