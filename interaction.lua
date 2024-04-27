@@ -1,5 +1,3 @@
-require"utils"
-
 local interaction = {}
 
 local Interactable = {

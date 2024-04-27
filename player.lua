@@ -16,6 +16,7 @@ local queued_interact = nil
 local floor_plane
 local walk_loc = 214
 local player_x = 214
+local player_y = 0
 local animation_locked = false
 local animations = {}
 
@@ -35,7 +36,7 @@ local function start_walk_animation()
 end
 
 local function stop_walk_animation()
-	if queued_interact then
+	if queued_interact and queued_interact.verb == "take" then
 		set_state"grab_forward"
 	else
 		set_state"idle"
@@ -97,7 +98,7 @@ function player.update()
 end
 
 function player.draw()
-	spr(frame.spr,player_x-32+(spr_flip and 8 or -8),140,spr_flip)
+	spr(frame.spr,player_x-32+(spr_flip and 8 or -8),player_y-62,spr_flip)
 end
 
 function player.set_dest(x)
@@ -110,11 +111,14 @@ end
 function player.enter_room(plane,x)
 	floor_plane = plane
 	player_x = x
+	player_y = floor_plane.y
 end
 
-function player.go_to_interact(interaction)
+function player.interact(interaction)
 	local interactable_rect = interaction.interactable.rect
-	player.set_dest(interactable_rect.pos[1]+interactable_rect.size[1]/2)
+	if interaction.verb ~= "look" then
+		player.set_dest(interactable_rect.pos[1]+interactable_rect.size[1]/2)
+	end
 	queued_interact = interaction
 end
 
