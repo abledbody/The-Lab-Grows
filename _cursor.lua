@@ -1,6 +1,7 @@
 --[[pod_format="raw",created="2024-04-20 04:24:34",modified="2024-04-23 22:47:18",revision=442]]
 local locations = require"locations"
 local player = require"player"
+local got = require"volref".got
 
 local _cursor = {}
 
@@ -23,13 +24,13 @@ function _cursor.update()
 	local hovered_interactable = nil
 	for object in locations.all_objects() do
 		local interactable = object.interactable
-		hovered_interactable = interactable:hovered(mouse_x,mouse_y) and interactable or hovered_interactable
+		hovered_interactable = got(interactable) and interactable:hovered(mouse_x,mouse_y) and interactable or hovered_interactable
 	end
-	cursor_gfx = hovered_interactable and
+	cursor_gfx = got(hovered_interactable) and
 		(lmb and grabbing_cursor or grabbable_cursor)
 		or point_cursor
 	if lmb and not was_lmb then
-		if hovered_interactable then
+		if got(hovered_interactable) then
 			player.interact{interactable = hovered_interactable, verb = "take"}
 		else
 			player.set_dest(mouse_x)

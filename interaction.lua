@@ -1,3 +1,6 @@
+local volref,got
+do local ref = require"volref" volref,got = ref.volref,ref.got end
+
 local interaction = {}
 
 local Interactable = {
@@ -5,8 +8,10 @@ local Interactable = {
 		return self.rect:contains(x,y)
 	end,
 	interact = function(self,verb)
-		if not self.interactions[verb] then return end
-		self.interactions[verb](self)
+		if not got(self) then return end
+		local callback = self.interactions[verb]
+		if not callback then return end
+		callback(self)
 	end,
 }
 Interactable.__index = Interactable
@@ -17,7 +22,7 @@ function interaction.interactable(rect,interactions)
 		interactions = interactions,
 	}
 	setmetatable(o,Interactable)
-	return o
+	return volref(o)
 end
 
 return interaction

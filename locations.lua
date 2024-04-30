@@ -2,6 +2,7 @@
 local player = require"player"
 local items = require"items"
 local vec = require"vectors"
+local got = require"volref".got
 
 local locations = {}
 
@@ -55,9 +56,14 @@ function locations.draw_fg()
 end
 
 function locations.draw_objects()
-	for object in all(room.objects) do
-		if object.draw then
-			object:draw()
+	for i = #room.objects,1,-1 do
+		local object = got(room.objects[i])
+		if object then
+			if object.draw then
+				object:draw()
+			end
+		else
+			deli(room.objects,i)
 		end
 	end
 end

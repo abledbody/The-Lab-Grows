@@ -1,6 +1,7 @@
 --[[pod_format="raw",created="2024-04-18 23:56:10",modified="2024-04-23 22:47:18",revision=1734]]
 local utils = require"utils"
 local animation = require"animation"
+local got = require"volref".got
 
 local player = {}
 local walk_speed = 2.6
@@ -68,9 +69,10 @@ end
 
 local function interact_with_queued()
 	if not queued_interact then return end
+	local interactable = got(queued_interact.interactable)
+	if not interactable then return end
 	queued_interact.interactable:interact(queued_interact.verb)
 	queued_interact = nil
-	note(nil,2,32,nil,nil,9)
 end
 
 -- Animations --
