@@ -24,14 +24,14 @@ function _cursor.update()
 	local hovered_interactable = nil
 	for object in locations.all_objects() do
 		local interactable = object.interactable
-		hovered_interactable = got(interactable) and interactable:hovered(mouse_x,mouse_y) and interactable or hovered_interactable
+		hovered_interactable = got(interactable) and interactable:hovered(mouse_x,mouse_y) and object or hovered_interactable
 	end
 	cursor_gfx = got(hovered_interactable) and
 		(lmb and grabbing_cursor or grabbable_cursor)
 		or point_cursor
 	if lmb and not was_lmb then
 		if got(hovered_interactable) then
-			player.interact{interactable = hovered_interactable, verb = "take"}
+			player.interact{target = hovered_interactable, verb = "take"}
 		else
 			player.set_dest(mouse_x)
 		end

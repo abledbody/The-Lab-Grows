@@ -69,9 +69,8 @@ end
 
 local function interact_with_queued()
 	if not queued_interact then return end
-	local interactable = got(queued_interact.interactable)
-	if not interactable then return end
-	queued_interact.interactable:interact(queued_interact.verb)
+	local interactable = got(queued_interact.target,"interactable")
+	interactable:interact(queued_interact.verb)
 	queued_interact = nil
 end
 
@@ -117,7 +116,7 @@ function player.enter_room(plane,x)
 end
 
 function player.interact(interaction)
-	local interactable_rect = interaction.interactable.rect
+	local interactable_rect = interaction.target.interactable.rect
 	if interaction.verb ~= "look" then
 		player.set_dest(interactable_rect.pos[1]+interactable_rect.size[1]/2)
 	end

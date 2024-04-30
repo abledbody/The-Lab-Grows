@@ -22,7 +22,7 @@ function interaction.interactable(rect,interactions)
 		interactions = interactions,
 	}
 	setmetatable(o,Interactable)
-	return volref(o)
+	return o
 end
 
 return interaction
