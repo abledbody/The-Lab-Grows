@@ -8,7 +8,10 @@ local player = require"player"
 local locations = require"locations"
 local light_levels = require"light_levels"
 
-locations.set_room(1,1)
+function _init()
+	locations.set_room(1,1)
+	note(nil,0,32,nil,nil,10)
+end
 
 function _update()
 	_cursor.update()
@@ -25,4 +28,4 @@ function _draw()
 	--print(string.format("%.1f",stat(1)*100),0,0,37)
 end
 
-note(nil,0,32,nil,nil,10)
+include("error_explorer.lua")
