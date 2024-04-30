@@ -2,6 +2,9 @@
 local utils = require"utils"
 local animation = require"animation"
 local got = require"volref".got
+local light_levels = require"light_levels"
+local vec = require"vectors"
+local comment = require"comment"
 
 local player = {}
 local walk_speed = 2.6
@@ -16,8 +19,7 @@ local queued_interact = nil
 
 local floor_plane
 local walk_loc = 214
-local player_x = 214
-local player_y = 0
+player.position = vec(214,0)
 local animation_locked = false
 local animations = {}
 
@@ -31,8 +33,9 @@ local function set_state(_state,reset_frame)
 end
 
 local function start_walk_animation()
-	spr_flip = (player_x > walk_loc) or (not (player_x < walk_loc) and spr_flip)
-	if player_x == walk_loc then return end
+	local px = player.position[1]
+	spr_flip = (px > walk_loc) or (not (px < walk_loc) and spr_flip)
+	if px == walk_loc then return end
 	set_state"walking"
 end
 
@@ -51,12 +54,12 @@ local function play_footstep_sound()
 end
 
 local function walk_frame()
-	player_x = utils.move_towards(player_x,walk_loc,walk_speed)
+	player.position[1] = utils.move_towards(player.position[1],walk_loc,walk_speed)
 end
 
 local function finish_animation()
 	animation_locked = false
-	if player_x ~= walk_loc then
+	if player.position[1] ~= walk_loc then
 		start_walk_animation()
 	else
 		set_state"idle"
@@ -93,13 +96,23 @@ anim = animation.play(animations.idle)
 function player.update()
 	anim(dt)
 	frame = anim.anim[anim.f]
-	if player_x == walk_loc and not animation_locked then
+	if player.position[1] == walk_loc and not animation_locked then
 		stop_walk_animation()
 	end
 end
 
 function player.draw()
-	spr(frame.spr,player_x-32+(spr_flip and 8 or -8),player_y-62,spr_flip)
+	local light_level = 0
+	local px = player.position[1]
+	for zone in all(floor_plane.light_zones) do
+		if px >= zone.l and px <= zone.r then
+			light_level = zone.level
+			break
+		end
+	end
+	light_levels.set(light_level)
+	spr(frame.spr,px-32+(spr_flip and 8 or -8),player.position[2]-62,spr_flip)
+	light_levels.set(0)
 end
 
 function player.set_dest(x)
@@ -111,13 +124,14 @@ end
 
 function player.enter_room(plane,x)
 	floor_plane = plane
-	player_x = x
-	player_y = floor_plane.y
+	player.position = vec(x,floor_plane.y)
 end
 
 function player.interact(interaction)
 	local interactable_rect = interaction.target.interactable.rect
-	if interaction.verb ~= "look" then
+	if interaction.verb == "look" then
+		comment.new(interaction.target.interactable.interactions.look(),player,vec(0,-72))
+	else
 		player.set_dest(interactable_rect.pos[1]+interactable_rect.size[1]/2)
 	end
 	queued_interact = interaction

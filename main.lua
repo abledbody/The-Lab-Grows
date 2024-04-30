@@ -7,6 +7,7 @@ local _cursor = require"_cursor"
 local player = require"player"
 local locations = require"locations"
 local light_levels = require"light_levels"
+local comment = require"comment"
 
 function _init()
 	locations.set_room(1,1)
@@ -16,6 +17,7 @@ end
 function _update()
 	_cursor.update()
 	player.update()
+	comment.update()
 end
 
 function _draw()
@@ -24,6 +26,7 @@ function _draw()
 	player.draw()
 	locations.draw_objects()
 	locations.draw_fg()
+	comment.draw()
 	_cursor.draw()
 	--print(string.format("%.1f",stat(1)*100),0,0,37)
 end

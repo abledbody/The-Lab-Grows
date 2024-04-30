@@ -30,6 +30,6 @@ return {
 	end,
 	-- Checks if a reference is valid and optionally if it has a key.
 	got = function(ref,key)
-		return (ref and not rawget(ref,"destroyed")) and ((key and ref[key]) or ref)
+		return (ref and not rawget(ref,"destroyed")) and (key and ref[key] or ref)
 	end
 }

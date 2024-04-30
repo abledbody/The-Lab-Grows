@@ -2,7 +2,10 @@
 local player = require"player"
 local items = require"items"
 local vec = require"vectors"
-local got = require"volref".got
+local volref,got
+do local ref = require"volref" volref,got = ref.volref,ref.got end
+local interaction = require"interaction"
+local utils = require"utils"
 
 local locations = {}
 
@@ -10,28 +13,42 @@ local rooms = {}
 rooms[1] = {
 	bg_sprite = {
 		sprite = 65,
-		pos = vec(30,54),
+		pos = vec(30,61),
 	},
 	fg_sprite = {
 		sprite = 66,
-		pos = vec(32,178),
+		pos = vec(31,93),
 	},
 	floor_planes = {
 		{
-			y = 202,
+			y = 206,
 			l = 88,
 			r = 410,
+			light_zones = {
+				{ l = 88, r = 200, level = 0 },
+				{ l = 200, r = 410, level = -1 },
+			},
 		},
 	},
 	entry_points = {
 		{
-			x = 240,
+			x = 376,
 			floor_plane_index = 1,
 		}
 	},
 }
 rooms[1].objects = {
-	items.new"screwdriver":into_scene(vec(64,171),rooms[1]),
+	items.new"screwdriver":into_scene(vec(54,181),rooms[1]),
+	volref({
+		interactable = interaction.interactable(
+			utils.rect(vec(65,154),vec(21,19)),
+			{
+				look = function()
+					return "I can see my reflection in this box. I don't recognize it."
+				end,
+			}
+		),
+	}),
 }
 local room = rooms[1]
 
