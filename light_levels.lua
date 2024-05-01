@@ -1,7 +1,7 @@
 --[[pod_format="raw",created="2024-04-19 04:27:30",modified="2024-04-23 02:14:58",revision=811]]
 local light_levels = {}
 
-local normal = fetch"/ram/cart/pal/0.pal"
+local normal = fetch"pal/0.pal"
 
 poke4(0x5000, get(normal))
 
